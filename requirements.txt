@@ -1,0 +1,13 @@
+numpy
+pandas
+asyncio
+flask
+fastapi
+uvicorn
+requests
+loguru
+pytest
+scikit-learn
+pydantic
+matplotlib
+tqdm
