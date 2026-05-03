@@ -1,27 +1,21 @@
-# Web Framework & Server
-fastapi
-uvicorn[standard]
-pydantic
-
-# Networking & Communication
-httpx          # Replaces 'requests' for better async support in your LB and Heartbeat
-requests       # Kept for compatibility if needed
-
-# Hardware & System Monitoring
-psutil         # For CPU usage tracking in your heartbeat
-nvidia-ml-py   # Essential for pynvml to track G4dn GPU VRAM
-
-# Data Processing & ML
 numpy
 pandas
-scikit-learn   # For your MushroomProject predictor or circuit optimization
-torch          # Needed for LLM inference on your workers
-
-# Utilities & Logging
+asyncio
+flask
+fastapi
+uvicorn
+requests
 loguru
-tqdm
-asyncio        # Part of Python stdlib, but listed for clarity
-
-# Visualization & Testing
-matplotlib
 pytest
+scikit-learn
+pydantic
+matplotlib
+tqdm
+
+# RAG
+faiss-cpu>=1.7.4
+sentence-transformers>=2.2.2
+pymupdf>=1.23.0          # PDF reading (fitz)
+ 
+# LLM
+requests>=2.31.0

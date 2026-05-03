@@ -1,5 +1,5 @@
 # llm/inference.py
-# LLM inference via Ollama — tuned for the College Advisor use case.
+# LLM inference via Ollama — tuned for the Diffusion Models Expert use case.
 #
 # ── One-time setup ───────────────────────────────────────────────────────────
 #   1. Install Ollama:
@@ -32,25 +32,25 @@ logger = logging.getLogger(__name__)
 # Configuration
 # ---------------------------------------------------------------------------
 OLLAMA_BASE_URL = "http://localhost:11434"
-MODEL_NAME      = "mistral"    # change to "llama3" or "tinyllama" if needed
-REQUEST_TIMEOUT = 120          # seconds — LLM can be slow on CPU
-MAX_TOKENS      = 512          # longer answers for advisor context
+MODEL_NAME      = "tinyllama"   # change to "mistral" or "llama3" for better quality
+REQUEST_TIMEOUT = 120           # seconds — LLM can be slow on CPU
+MAX_TOKENS      = 512
 
 # ---------------------------------------------------------------------------
-# System prompt — defines the LLM's persona for every conversation
+# System prompt — diffusion model expert persona
 # ---------------------------------------------------------------------------
 SYSTEM_PROMPT = """\
-You are an official academic advisor for a university engineering faculty.
-You have been given excerpts from the official college bylaws and regulations as context.
+You are an expert assistant specialized in diffusion models and generative AI research.
+You have been given excerpts from research papers on diffusion models as context.
 
 Your job:
-- Answer the student's question accurately based ONLY on the provided context.
-- If the context contains the answer, quote or paraphrase the relevant rule clearly.
+- Answer the user's question accurately based ONLY on the provided context.
+- If the context contains the answer, explain it clearly and technically.
 - If the context does not contain enough information, say:
-  "I could not find a clear answer in the bylaws provided. Please visit the academic affairs office for clarification."
-- Be concise, professional, and helpful.
-- Do not make up rules or policies that are not in the context.
-- When referencing a rule, mention its source document so the student can verify it.
+  "I could not find that information in the provided papers."
+- Be precise and technical. You are talking to researchers or ML engineers.
+- When referencing a concept, mention its source paper so the user can verify it.
+- Do not make up facts or numbers not present in the context.
 """
 
 
@@ -59,8 +59,8 @@ Your job:
 # ---------------------------------------------------------------------------
 def run_llm(query: str, context: str) -> str:
     """
-    Send (student query + retrieved bylaw context) to the Ollama LLM
-    and return the advisor's answer.
+    Send (user query + retrieved paper context) to the Ollama LLM
+    and return the expert's answer.
 
     Falls back to a stub response if Ollama is not running,
     so the rest of the distributed system keeps working.
@@ -88,15 +88,15 @@ def run_llm(query: str, context: str) -> str:
 # ---------------------------------------------------------------------------
 def _build_prompt(query: str, context: str) -> str:
     """
-    Combine the retrieved bylaw excerpts with the student's question.
-    This is the core of RAG: the LLM sees the relevant rules before answering.
+    Combine the retrieved paper excerpts with the user's question.
+    This is the core of RAG: the LLM sees the relevant context before answering.
     """
     return (
-        "### Relevant Excerpts from the College Bylaws:\n"
+        "### Relevant Excerpts from Diffusion Model Research Papers:\n"
         f"{context}\n\n"
-        "### Student Question:\n"
+        "### Question:\n"
         f"{query}\n\n"
-        "### Advisor Answer:"
+        "### Expert Answer:"
     )
 
 
@@ -132,7 +132,7 @@ def _stub_response(query: str, context: str, reason: str = "") -> str:
     note = f" [{reason}]" if reason else ""
     preview = context[:120].replace("\n", " ")
     return (
-        f"[STUB ADVISOR RESPONSE{note}]\n"
+        f"[STUB RESPONSE{note}]\n"
         f"Question : {query}\n"
         f"Context  : {preview}…\n"
         f"(Start Ollama and pull a model to get real answers)"
@@ -164,23 +164,25 @@ def check_ollama_health() -> dict:
 if __name__ == "__main__":
     logging.basicConfig(level=logging.INFO, format="%(message)s")
 
-    print("=== LLM Inference Self-Test (College Advisor) ===\n")
+    print("=== LLM Inference Self-Test (Diffusion Models Expert) ===\n")
     health = check_ollama_health()
-    print(f"Ollama reachable      : {health['reachable']}")
+    print(f"Ollama reachable          : {health['reachable']}")
     print(f"Model '{MODEL_NAME}' available : {health['model_available']}")
-    print(f"Available models      : {health['models']}\n")
+    print(f"Available models          : {health['models']}\n")
 
     sample_context = (
-        "[Source: bylaws.pdf | Chunk 4]\n"
-        "A student must complete a minimum of 136 credit hours to graduate. "
-        "At least 60 of these must be upper-division courses. "
-        "A minimum cumulative GPA of 2.0 is required for graduation.\n\n"
-        "[Source: bylaws.pdf | Chunk 12]\n"
-        "A student whose GPA falls below 2.0 for two consecutive semesters "
-        "will be placed on academic probation. Continued failure may result "
-        "in academic dismissal."
+        "[Source: 2307.01952v1.pdf | Chunk 79]\n"
+        "Classifier-free guidance is a technique to guide the iterative sampling "
+        "process of a diffusion model towards a conditioning signal c by mixing the "
+        "predictions of a conditional and an unconditional model: "
+        "Dw(x; σ, c) = (1 + w)D(x; σ, c) − wD(x; σ), "
+        "where w >= 0 is the guidance strength.\n\n"
+        "[Source: 2112.10752v2.pdf | Chunk 3]\n"
+        "Latent Diffusion Models (LDMs) apply the diffusion process in the latent space "
+        "of a pretrained autoencoder rather than directly in pixel space. "
+        "This reduces computational cost significantly while preserving image quality."
     )
-    sample_query = "How many credit hours do I need to graduate?"
+    sample_query = "What is classifier-free guidance and how does it work?"
 
     print(f"Query:\n{sample_query}\n")
     answer = run_llm(sample_query, sample_context)
