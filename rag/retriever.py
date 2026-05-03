@@ -131,11 +131,11 @@ if __name__ == "__main__":
     print(f"Indexed sources: {list_indexed_sources()}\n")
 
     test_queries = [
-        "What are the graduation requirements?",
-        "How many credit hours are needed to pass?",
-        "What is the grading system?",
-        "What happens if a student fails a course?",
-        "What are the rules for academic probation?",
+        "What is classifier-free guidance?",
+        "How does the latent diffusion model work?",
+        "What is the FID score of DiT-XL/2?",
+        "How does SDXL improve over previous stable diffusion models?",
+        "What is DDIM sampling?",
     ]
 
     for q in test_queries:
