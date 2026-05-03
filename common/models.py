@@ -1,4 +1,4 @@
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from uuid import UUID
 from typing import Dict, Any
 
@@ -7,21 +7,24 @@ class User_Request:
     user_id: str
     query: str
     user_sent_at: float
-    parameters: dict[str, any]
+    #parameters: dict[str, any]
+    parameters: dict = field(default_factory=dict)
 
 @dataclass
 class Master_Message_To_LB:
     request_id: UUID
     query: str # Added this back so LB knows the content
-    parameters: dict[str, any]
-    priority_level: int # Optional
+    #parameters: dict[str, any]
+    parameters: dict
+    priority_level: int=1 # Optional
 
 @dataclass
 class LB_To_Worker:
     task_id: UUID # Same as request_id
     lb_dispatched_at: float # LB timestamp
     instruction: str
-    parameters: dict[str, any]
+    #parameters: dict[str, any]
+    parameters: dict
 
 @dataclass
 class Worker_To_Master:
@@ -34,7 +37,8 @@ class Worker_To_Master:
     worker_received_at: float 
     inference_start: float
     inference_end: float
-    metrics: dict[str, float] # token count, vram, etc.
+    #metrics: dict[str, float] # token count, vram, etc.
+    metrics: dict
     status: str
 
 @dataclass

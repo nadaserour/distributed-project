@@ -1,0 +1,1 @@
+request_id,user_id,query_snippet,user_sent_at,master_received_at,dispatched_at,worker_id,provider,model_used,worker_received_at,inference_start,inference_end,master_responded_at,total_latency_s,inference_latency_s,status
