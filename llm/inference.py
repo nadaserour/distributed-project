@@ -32,25 +32,17 @@ logger = logging.getLogger(__name__)
 # Configuration
 # ---------------------------------------------------------------------------
 OLLAMA_BASE_URL = "http://localhost:11434"
-MODEL_NAME      = "tinyllama"   # change to "mistral" or "llama3" for better quality
-REQUEST_TIMEOUT = 120           # seconds — LLM can be slow on CPU
+MODEL_NAME      = "qwen2.5:14b"   # change to "mistral" or "llama3" for better quality
+REQUEST_TIMEOUT = 200           # seconds — LLM can be slow on CPU
 MAX_TOKENS      = 512
 
 # ---------------------------------------------------------------------------
 # System prompt — diffusion model expert persona
 # ---------------------------------------------------------------------------
 SYSTEM_PROMPT = """\
-You are an expert assistant specialized in diffusion models and generative AI research.
-You have been given excerpts from research papers on diffusion models as context.
-
-Your job:
-- Answer the user's question accurately based ONLY on the provided context.
-- If the context contains the answer, explain it clearly and technically.
-- If the context does not contain enough information, say:
-  "I could not find that information in the provided papers."
-- Be precise and technical. You are talking to researchers or ML engineers.
-- When referencing a concept, mention its source paper so the user can verify it.
-- Do not make up facts or numbers not present in the context.
+    "You are an expert engineering assistant. If context is provided, use it to answer. "
+    "If the user asks a general question or the context is empty, use your own knowledge "
+    "to provide a helpful and creative response."
 """
 
 
@@ -107,6 +99,7 @@ def _call_ollama(prompt: str) -> str:
         "prompt": prompt,
         "system": SYSTEM_PROMPT,
         "stream": False,
+        "num_ctx": 4096,
         "options": {
             "num_predict": MAX_TOKENS,
             "temperature": 0.2,   # low = more factual, less creative

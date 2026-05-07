@@ -110,7 +110,7 @@ def retrieve_context(query: str, k: int = TOP_K) -> str:
             )
 
     if not results:
-        return "No relevant information found in the college bylaws for this query."
+        return "GENERAL_KNOWLEDGE_MODE: No specific research paper chunks matched this query."
 
     return "\n\n".join(results)
 

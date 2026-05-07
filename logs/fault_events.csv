@@ -1,1 +1,33 @@
 timestamp,event,node_id,worker_url,detail,elapsed_silent_s
+1778110007.4769,WORKER_RECOVERED,22da45d9-b0b0-442a-a2c6-7b557bd17d2b,http://localhost:8002,Health check passed,0.0
+1778110033.5724,WORKER_DEAD,22da45d9-b0b0-442a-a2c6-7b557bd17d2b,http://localhost:8002,Heartbeat timeout,26.094
+1778110037.7538,WORKER_RECOVERED,22da45d9-b0b0-442a-a2c6-7b557bd17d2b,http://localhost:8002,Health check passed,0.0
+1778110063.5728,WORKER_DEAD,22da45d9-b0b0-442a-a2c6-7b557bd17d2b,http://localhost:8002,Heartbeat timeout,25.818
+1778110068.0473,WORKER_RECOVERED,22da45d9-b0b0-442a-a2c6-7b557bd17d2b,http://localhost:8002,Health check passed,0.0
+1778110093.5965,WORKER_DEAD,22da45d9-b0b0-442a-a2c6-7b557bd17d2b,http://localhost:8002,Heartbeat timeout,25.548
+1778110098.3339,WORKER_RECOVERED,22da45d9-b0b0-442a-a2c6-7b557bd17d2b,http://localhost:8002,Health check passed,0.0
+1778110123.6188,WORKER_DEAD,22da45d9-b0b0-442a-a2c6-7b557bd17d2b,http://localhost:8002,Heartbeat timeout,25.284
+1778110128.6397,WORKER_RECOVERED,22da45d9-b0b0-442a-a2c6-7b557bd17d2b,http://localhost:8002,Health check passed,0.0
+1778110163.624,WORKER_DEAD,22da45d9-b0b0-442a-a2c6-7b557bd17d2b,http://localhost:8002,Heartbeat timeout,34.984
+1778110188.926,WORKER_RECOVERED,22da45d9-b0b0-442a-a2c6-7b557bd17d2b,http://localhost:8002,Health check passed,0.0
+1778110223.6692,WORKER_DEAD,22da45d9-b0b0-442a-a2c6-7b557bd17d2b,http://localhost:8002,Heartbeat timeout,34.744
+1778110249.2266,WORKER_RECOVERED,22da45d9-b0b0-442a-a2c6-7b557bd17d2b,http://localhost:8002,Health check passed,0.0
+1778110283.7168,WORKER_DEAD,22da45d9-b0b0-442a-a2c6-7b557bd17d2b,http://localhost:8002,Heartbeat timeout,34.491
+1778110364.2936,WORKER_DEAD,9275aeee-0c12-f1df-d755-59696d64d815,http://localhost:8002,Heartbeat timeout,28.731
+1778116892.9501,WORKER_DEAD,69f39c8d-7f35-c749-67ca-82e6317f56de,http://localhost:8001,Heartbeat timeout,2960.063
+1778116893.0327,WORKER_DEAD,9275aeee-0c12-f1df-d755-59696d64d815,http://localhost:8002,Heartbeat timeout,2962.358
+1778139968.1881,WORKER_DEAD,69f39c8d-7f35-c749-67ca-82e6317f56de,http://localhost:8001,Heartbeat timeout,23022.97
+1778139968.3807,WORKER_DEAD,9275aeee-0c12-f1df-d755-59696d64d815,http://localhost:8002,Heartbeat timeout,23027.736
+1778140783.8261,WORKER_RECOVERED,69f39c8d-7f35-c749-67ca-82e6317f56de,http://localhost:8001,Health check passed,0.0
+1778141203.824,WORKER_DEAD,69f39c8d-7f35-c749-67ca-82e6317f56de,http://localhost:8001,Heartbeat timeout,30.981
+1778141553.9466,WORKER_DEAD,69f39c8d-7f35-c749-67ca-82e6317f56de,http://localhost:8001,Heartbeat timeout,25.214
+1778141954.2633,WORKER_DEAD,69f39c8d-7f35-c749-67ca-82e6317f56de,http://localhost:8001,Heartbeat timeout,26.964
+1778141954.2673,WORKER_DEAD,9275aeee-0c12-f1df-d755-59696d64d815,http://localhost:8002,Heartbeat timeout,27.743
+1778148947.2932,WORKER_DEAD,69f39c8d-7f35-c749-67ca-82e6317f56de,http://localhost:8001,Heartbeat timeout,29.012
+1778148957.3101,WORKER_DEAD,9275aeee-0c12-f1df-d755-59696d64d815,http://localhost:8002,Heartbeat timeout,27.908
+1778150581.5841,WORKER_DEAD,69f39c8d-7f35-c749-67ca-82e6317f56de,http://localhost:8001,Heartbeat timeout,27.1
+1778151162.0032,WORKER_DEAD,69f39c8d-7f35-c749-67ca-82e6317f56de,http://localhost:8001,Heartbeat timeout,27.462
+1778154592.5389,WORKER_DEAD,69f39c8d-7f35-c749-67ca-82e6317f56de,http://localhost:8001,Heartbeat timeout,98.941
+1778154593.1402,WORKER_DEAD,9275aeee-0c12-f1df-d755-59696d64d815,http://localhost:8002,Heartbeat timeout,98.514
+1778154593.922,WORKER_RECOVERED,69f39c8d-7f35-c749-67ca-82e6317f56de,http://localhost:8001,Health check passed,0.0
+1778154594.2832,WORKER_RECOVERED,9275aeee-0c12-f1df-d755-59696d64d815,http://localhost:8002,Health check passed,0.0

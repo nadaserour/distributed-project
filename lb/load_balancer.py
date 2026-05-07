@@ -33,8 +33,8 @@ logger = logging.getLogger(__name__)
 # ---------------------------------------------------------------------------
 MAX_TASKS_PER_WORKER = 10        # hard cap before a worker is "saturated"
 QUEUE_MAXSIZE         = 500      # max pending requests before backpressure kicks in
-WORKER_TIMEOUT_SEC    = 30.0     # seconds before a silent worker is considered dead
-HTTP_REQUEST_TIMEOUT  = 120.0    # timeout for the actual LLM call to a worker
+WORKER_TIMEOUT_SEC    = 300     # seconds before a silent worker is considered dead
+HTTP_REQUEST_TIMEOUT  = 300    # timeout for the actual LLM call to a worker
 RETRY_ATTEMPTS        = 2        # how many times to retry on transient failures
 
 

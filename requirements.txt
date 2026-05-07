@@ -1,21 +1,25 @@
-numpy
-pandas
-asyncio
-flask
+# --- CORE WEB & API ---
 fastapi
 uvicorn
-requests
-loguru
-pytest
-scikit-learn
+python-multipart
+httpx            # Essential for async communication between Master and Workers
 pydantic
+requests>=2.31.0
+
+# --- DATA & MATH ---
+numpy
+pandas
+scikit-learn
 matplotlib
 tqdm
 
-# RAG
+# --- RAG & DOCUMENT PROCESSING ---
 faiss-cpu>=1.7.4
 sentence-transformers>=2.2.2
-pymupdf>=1.23.0          # PDF reading (fitz)
- 
-# LLM
-requests>=2.31.0
+pymupdf>=1.23.0        # PDF reading (fitz)
+
+# --- UTILITIES ---
+loguru                 # For clean, colored system logs
+asyncio
+psutil                 # For monitoring system/GPU health
+pytest
