@@ -32,9 +32,9 @@ logger = logging.getLogger(__name__)
 # Configuration
 # ---------------------------------------------------------------------------
 OLLAMA_BASE_URL = "http://localhost:11434"
-MODEL_NAME      = "qwen2.5:14b"   # change to "mistral" or "llama3" for better quality
+MODEL_NAME      = "llama3.2-fast"   # change to "mistral" or "llama3" for better quality
 REQUEST_TIMEOUT = 200           # seconds — LLM can be slow on CPU
-MAX_TOKENS      = 512
+MAX_TOKENS      = 256
 
 # ---------------------------------------------------------------------------
 # System prompt — diffusion model expert persona
@@ -99,7 +99,7 @@ def _call_ollama(prompt: str) -> str:
         "prompt": prompt,
         "system": SYSTEM_PROMPT,
         "stream": False,
-        "num_ctx": 4096,
+        "num_ctx": 2048,
         "options": {
             "num_predict": MAX_TOKENS,
             "temperature": 0.2,   # low = more factual, less creative

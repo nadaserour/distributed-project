@@ -19,7 +19,7 @@ logger = logging.getLogger(__name__)
 INDEX_FOLDER = Path(__file__).parent / "index"
 
 EMBEDDING_MODEL = "all-MiniLM-L6-v2"
-TOP_K = 3
+TOP_K = 2
 
 # ---------------------------------------------------------------------------
 # Lazy-loaded globals

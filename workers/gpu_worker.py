@@ -88,7 +88,7 @@ def generate_task(data: LB_To_Worker):
             task_id=str(data.task_id),
             worker_id=str(MY_NODE_ID),
             response_text=ai_answer,
-            model_used="qwen2.5:14b ",
+            model_used="llama3.2-fast",
             provider="Ollama-Distributed-RAG",
             worker_received_at=received_at,
             inference_start=inference_start,
