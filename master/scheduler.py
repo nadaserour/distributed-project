@@ -1,22 +1,3 @@
-# master/scheduler.py
-#
-# Gateway / Master Node — the single entry point for all client traffic.
-#
-# Responsibilities (per architecture spec):
-#   1. User Management     — API-key validation on every request.
-#   2. Admission Control   — Rejects new requests when the LB queue is full
-#                            (backpressure), preventing system overload.
-#   3. Data Logging        — Writes per-request timing rows to a CSV file
-#                            and logs them for live monitoring.
-#   4. Result Persistence  — Caches LLM answers in memory (+ CSV) so a
-#                            brief connection flicker doesn't lose a result.
-#   5. Worker Registry     — Accepts worker registrations and heartbeats,
-#                            forwards them to the Load Balancer.
-#   6. Admin Visibility    — Exposes /admin/stats for dashboards.
-#
-# The Master is a FastAPI application.  Launch with:
-#   uvicorn master.scheduler:app --host 0.0.0.0 --port 8000
-
 import asyncio
 import csv
 import logging
@@ -26,9 +7,9 @@ from pathlib import Path
 from typing import Optional
 from uuid import UUID, uuid4
 
-from fastapi import FastAPI, HTTPException, Header, Request # type: ignore
-from fastapi.responses import JSONResponse # type: ignore
-from pydantic import BaseModel # type: ignore
+from fastapi import FastAPI, HTTPException, Header, Request  # type: ignore
+from fastapi.responses import JSONResponse  # type: ignore
+from pydantic import BaseModel  # type: ignore
 
 from common.models import (
     Final_Response,
@@ -41,7 +22,7 @@ from lb.load_balancer import LoadBalancer
 from fault_tolerance.fault_handler import FaultHandler
 
 # ---------------------------------------------------------------------------
-# Logging
+# Logging Configuration
 # ---------------------------------------------------------------------------
 logging.basicConfig(
     level=logging.INFO,
@@ -58,7 +39,7 @@ VALID_API_KEYS: set[str] = set(
 )
 LOG_DIR   = Path(os.getenv("LOG_DIR",  "logs"))
 LOG_CSV   = LOG_DIR / "request_log.csv"
-MAX_QUEUE = int(os.getenv("MAX_QUEUE", "500"))   # must match LB's QUEUE_MAXSIZE
+MAX_QUEUE = int(os.getenv("MAX_QUEUE", "1000"))   # Aligned with LB's QUEUE_MAXSIZE
 
 LOG_DIR.mkdir(parents=True, exist_ok=True)
 
@@ -82,15 +63,19 @@ def _ensure_csv_header() -> None:
 _ensure_csv_header()
 
 
-def _append_csv_row(row: dict) -> None:
+# ── PERFORMANCE FIX: Execute blocking disk writes in an OS thread pool ────
+def _append_csv_row_sync(row: dict) -> None:
     with LOG_CSV.open("a", newline="") as f:
         w = csv.DictWriter(f, fieldnames=_CSV_HEADER, extrasaction="ignore")
         w.writerow(row)
 
+async def _append_csv_row(row: dict) -> None:
+    """Non-blocking wrapper for file I/O using asyncio thread executor."""
+    await asyncio.to_thread(_append_csv_row_sync, row)
+
 
 # ---------------------------------------------------------------------------
 # In-memory result cache (request_id → Final_Response)
-# Simple LRU-ish: evict oldest when size exceeds limit.
 # ---------------------------------------------------------------------------
 _CACHE_MAX = 5_000
 _result_cache: dict[str, Final_Response] = {}
@@ -124,17 +109,11 @@ async def _shutdown() -> None:
     logger.info("[Master] Shutting down.")
 
 
-# ---------------------------------------------------------------------------
-# Pydantic request/response bodies for FastAPI
-# ---------------------------------------------------------------------------
 class WorkerRegistrationRequest(BaseModel):
-    node_id: str   # UUID as string
-    url: str       # e.g. "http://192.168.1.5:8001"
+    node_id: str   
+    url: str       
 
 
-# ---------------------------------------------------------------------------
-# Helper: API-key guard
-# ---------------------------------------------------------------------------
 def _require_api_key(x_api_key: Optional[str]) -> None:
     if x_api_key not in VALID_API_KEYS:
         raise HTTPException(status_code=401, detail="Invalid or missing API key.")
@@ -148,20 +127,12 @@ async def handle_query(
     user_request: User_Request,
     x_api_key: Optional[str] = Header(default=None),
 ) -> dict:
-    """
-    Accepts a user query, routes it through the LB to a GPU worker,
-    persists the result, and returns the answer.
-
-    Returns 429 if the system is overloaded (backpressure).
-    Returns 401 if the API key is missing or invalid.
-    """
-    # ── 1. Auth ──────────────────────────────────────────────────────────
     _require_api_key(x_api_key)
 
     master_received_at = time.time()
     request_id = str(uuid4())
 
-    # ── 2. Admission Control ─────────────────────────────────────────────
+    # Admission Control Check
     if lb.queue_depth >= MAX_QUEUE:
         logger.warning(
             f"[Master] Backpressure — queue depth {lb.queue_depth}/{MAX_QUEUE}. "
@@ -177,7 +148,7 @@ async def handle_query(
         f"query: '{user_request.query[:60]}…'"
     )
 
-    # ── 3. Build the internal task for the LB ────────────────────────────
+    # Build internal routing schemas
     master_msg = Master_Message_To_LB(
         request_id    = UUID(request_id),
         query         = user_request.query,
@@ -195,7 +166,7 @@ async def handle_query(
 
     dispatched_at = lb_task.lb_dispatched_at
 
-    # ── 4. Dispatch via Load Balancer ─────────────────────────────────────
+    # Dispatch via Load Balancer
     try:
         worker_result = await lb.dispatch(lb_task)
     except asyncio.QueueFull:
@@ -203,19 +174,20 @@ async def handle_query(
             status_code=429,
             detail="Request queue is full. Please try again shortly.",
         )
-    except RuntimeError as exc:
+    except Exception as exc:
         logger.error(f"[Master] Task {request_id} failed: {exc}")
-        await fh.complete_task(lb_task.task_id)   # clean up FH tracking on failure
-        _log_failed_row(
+        await fh.complete_task(lb_task.task_id)   
+        # Non-blocking failed log write
+        asyncio.create_task(_log_failed_row(
             request_id, user_request, master_received_at, dispatched_at, str(exc)
-        )
+        ))
         raise HTTPException(status_code=503, detail="All GPU workers are unavailable.")
 
-    await fh.complete_task(lb_task.task_id)   # task finished — remove from watchlist
+    await fh.complete_task(lb_task.task_id)   
 
     master_responded_at = time.time()
 
-    # ── 5. Build Final Response ───────────────────────────────────────────
+    # Build Final Response Object
     total_latency     = master_responded_at - user_request.user_sent_at
     inference_latency = worker_result.inference_end - worker_result.inference_start
 
@@ -226,11 +198,11 @@ async def handle_query(
         total_latency = round(total_latency, 4),
     )
 
-    # ── 6. Persist result ─────────────────────────────────────────────────
     _cache_result(final)
 
-    # ── 7. Log to CSV ──────────────────────────────────────────────────────
-    _append_csv_row({
+    # ── PERFORMANCE FIX: Non-blocking asynchronous CSV write ────────────────
+    # We spawn this as a background task so we can instantly respond to the client!
+    asyncio.create_task(_append_csv_row({
         "request_id":          request_id,
         "user_id":             user_request.user_id,
         "query_snippet":       user_request.query[:80],
@@ -247,7 +219,7 @@ async def handle_query(
         "total_latency_s":     round(total_latency, 4),
         "inference_latency_s": round(inference_latency, 4),
         "status":              worker_result.status,
-    })
+    }))
 
     logger.info(
         f"[Master] ✓ Request {request_id} completed | "
@@ -255,11 +227,15 @@ async def handle_query(
         f"worker={worker_result.worker_id}"
     )
 
+    # ── TELEMETRY FIX: Pass downstream worker parameters back to the client ──
     return {
-        "request_id":    final.request_id,
-        "status":        final.status,
-        "answer":        final.answer,
-        "total_latency": final.total_latency,
+        "request_id":        final.request_id,
+        "status":            final.status,
+        "answer":            final.answer,
+        "total_latency":     final.total_latency,
+        "worker_id":         worker_result.worker_id,
+        "model_used":        worker_result.model_used,
+        "inference_latency": round(inference_latency, 4)
     }
 
 
@@ -271,10 +247,6 @@ async def get_result(
     request_id: str,
     x_api_key: Optional[str] = Header(default=None),
 ) -> dict:
-    """
-    Returns a previously completed result from the in-memory cache.
-    Useful if the client's connection dropped after the worker finished.
-    """
     _require_api_key(x_api_key)
     result = _result_cache.get(request_id)
     if result is None:
@@ -292,10 +264,6 @@ async def get_result(
 # ---------------------------------------------------------------------------
 @app.post("/workers/register")
 async def register_worker(body: WorkerRegistrationRequest) -> dict:
-    """
-    Called by each GPU worker when it boots up.
-    No API key required — workers run inside the trusted network.
-    """
     node_id = UUID(body.node_id)
     await lb.register_worker(node_id, body.url)
     logger.info(f"[Master] Worker registered: {node_id} @ {body.url}")
@@ -307,10 +275,6 @@ async def register_worker(body: WorkerRegistrationRequest) -> dict:
 # ---------------------------------------------------------------------------
 @app.post("/heartbeat")
 async def receive_heartbeat(heartbeat: Worker_Heartbeat) -> dict:
-    """
-    Workers POST here every ~10 seconds with their current load metrics.
-    The Master forwards the data to the Load Balancer for routing decisions.
-    """
     await lb.update_worker_state(heartbeat)
     return {"status": "ok"}
 
@@ -322,12 +286,6 @@ async def receive_heartbeat(heartbeat: Worker_Heartbeat) -> dict:
 async def admin_stats(
     x_api_key: Optional[str] = Header(default=None),
 ) -> dict:
-    """
-    Returns a real-time snapshot of:
-      - Queue depth
-      - Alive worker count
-      - Per-worker metrics (tasks, CPU, VRAM, WLC score)
-    """
     _require_api_key(x_api_key)
     return {
         "queue_depth":         lb.queue_depth,
@@ -347,10 +305,6 @@ async def mark_dead(
     node_id: str,
     x_api_key: Optional[str] = Header(default=None),
 ) -> dict:
-    """
-    Manually marks a worker as dead.
-    Useful for fault-tolerance testing: simulate a node failure mid-run.
-    """
     _require_api_key(x_api_key)
     await lb.mark_worker_dead(UUID(node_id))
     return {"status": "marked_dead", "node_id": node_id}
@@ -359,14 +313,14 @@ async def mark_dead(
 # ---------------------------------------------------------------------------
 # Internal helper: log a failed request row to CSV
 # ---------------------------------------------------------------------------
-def _log_failed_row(
+async def _log_failed_row(
     request_id: str,
     user_request: User_Request,
     master_received_at: float,
     dispatched_at: float,
     error: str,
 ) -> None:
-    _append_csv_row({
+    await _append_csv_row({
         "request_id":          request_id,
         "user_id":             user_request.user_id,
         "query_snippet":       user_request.query[:80],
