@@ -39,7 +39,7 @@ def get_consistent_id(port):
     return uuid.UUID(hash_val)
 
 MY_NODE_ID = get_consistent_id(CURRENT_PORT)
-MASTER_URL = "http://192.168.8.186:8000"  # Change to your Master's actual IP
+MASTER_URL = f"http://localhost:{8000}"  # Change to your Master's actual IP
 active_tasks_counter = 0
 
 def get_gpu_vram():
