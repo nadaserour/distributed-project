@@ -48,7 +48,7 @@ logger = logging.getLogger("fault_handler")
 # ---------------------------------------------------------------------------
 WATCHDOG_INTERVAL_SEC  = 10.0   # how often the watchdog sweeps all workers
 RECOVERY_INTERVAL_SEC  = 30.0   # how often dead workers are probed for recovery
-HEARTBEAT_TIMEOUT_SEC  = 25.0   # seconds of silence before a worker is declared dead
+HEARTBEAT_TIMEOUT_SEC  = 120.0 #was 25  # seconds of silence before a worker is declared dead
                                  # (slightly less than LB's own WORKER_TIMEOUT_SEC
                                  #  so FH acts first)
 HEALTH_CHECK_TIMEOUT   = 5.0    # HTTP timeout for recovery probe
