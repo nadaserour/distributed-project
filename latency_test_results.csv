@@ -1,11 +1,11 @@
 request_id,prompt,status_code,latency_s,worker_id,response_char_size,error_msg
-1,What is the role of a vector database in a RAG pipeline?,200,16.6429,Unknown,1462,None
-2,How does edge connectivity differ from vertex connectivity?,200,16.348,Unknown,1150,None
-3,What is the role of a vector database in a RAG pipeline?,200,14.0332,Unknown,1170,None
-4,How does a master-worker architecture reduce inference bottlenecks?,200,16.6439,Unknown,1457,None
-5,How does a master-worker architecture reduce inference bottlenecks?,200,34.5244,Unknown,1498,None
-6,How does edge connectivity differ from vertex connectivity?,200,24.4626,Unknown,1198,None
-7,What is the role of a vector database in a RAG pipeline?,200,23.6663,Unknown,1441,None
-8,What is the physical significance of steady-state error?,200,23.561,Unknown,1331,None
-9,Explain the difference between PID and PD controllers.,200,31.8427,Unknown,1202,None
-10,What is the role of a vector database in a RAG pipeline?,200,15.132,Unknown,1371,None
+1,What are the design constraints of embedded systems?,200,22.9761,7b06ed3c-f54f-bf4c-54b4-c9384141bf7a,477,None
+2,What is the role of a vector database in a RAG pipeline?,200,77.4866,69f39c8d-7f35-c749-67ca-82e6317f56de,948,None
+3,How does a master-worker architecture reduce inference bottlenecks?,200,55.525,9275aeee-0c12-f1df-d755-59696d64d815,1251,None
+4,How does a master-worker architecture reduce inference bottlenecks?,200,95.0964,9275aeee-0c12-f1df-d755-59696d64d815,628,None
+5,How does a master-worker architecture reduce inference bottlenecks?,200,38.6483,69f39c8d-7f35-c749-67ca-82e6317f56de,554,None
+6,Explain the difference between PID and PD controllers.,200,99.0624,7b06ed3c-f54f-bf4c-54b4-c9384141bf7a,1185,None
+7,What are the design constraints of embedded systems?,200,99.1554,69f39c8d-7f35-c749-67ca-82e6317f56de,655,None
+8,What is the role of a vector database in a RAG pipeline?,200,101.8429,9275aeee-0c12-f1df-d755-59696d64d815,795,None
+9,How does a master-worker architecture reduce inference bottlenecks?,200,101.6463,69f39c8d-7f35-c749-67ca-82e6317f56de,1021,None
+10,What is the role of a vector database in a RAG pipeline?,200,107.185,9275aeee-0c12-f1df-d755-59696d64d815,964,None

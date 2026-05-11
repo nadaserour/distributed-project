@@ -368,3 +368,5 @@ timestamp,event,node_id,worker_url,detail,elapsed_silent_s
 1778405952.3209,WORKER_DEAD,9275aeee-0c12-f1df-d755-59696d64d815,http://localhost:8002,Heartbeat timeout,33.151
 1778405962.336,WORKER_DEAD,69f39c8d-7f35-c749-67ca-82e6317f56de,http://localhost:8001,Heartbeat timeout,26.775
 1778405972.353,WORKER_DEAD,7b06ed3c-f54f-bf4c-54b4-c9384141bf7a,http://localhost:8003,Heartbeat timeout,30.086
+1778537072.1428,WORKER_RECOVERED,69f39c8d-7f35-c749-67ca-82e6317f56de,http://localhost:8001,Health check passed,0.0
+1778537132.4944,WORKER_RECOVERED,69f39c8d-7f35-c749-67ca-82e6317f56de,http://localhost:8001,Health check passed,0.0

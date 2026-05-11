@@ -10,7 +10,7 @@ import aiohttp
 # ---------------------------------------------------------------------------
 MASTER_URL = "http://localhost:8000/query"  # Adjust endpoint path to match your API
 TOTAL_REQUESTS = 10                        # Scaled down from 1000 for safe step-up testing
-CONCURRENCY_LIMIT = 5                      # Max active simultaneous TCP connections
+CONCURRENCY_LIMIT = 16                      # Max active simultaneous TCP connections
 API_KEY = "dev-key-1"                      # Your master node's required auth key
 CSV_FILENAME = "latency_test_results.csv"
 
