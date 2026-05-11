@@ -32,7 +32,7 @@ logger = logging.getLogger(__name__)
 # Configuration
 # ---------------------------------------------------------------------------
 OLLAMA_BASE_URL = "http://20.39.233.53:11434"
-MODEL_NAME      = "llama3"   # change to "mistral" or "llama3" for better quality
+MODEL_NAME      = "tinyllama"   # change to "mistral" or "llama3" for better quality
 REQUEST_TIMEOUT = 200           # seconds — LLM can be slow on CPU
 MAX_TOKENS      = 256
 
