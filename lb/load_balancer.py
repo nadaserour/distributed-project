@@ -14,9 +14,9 @@ logger = logging.getLogger(__name__)
 # ---------------------------------------------------------------------------
 # Optimizing Tunables for Parallel GPU Batching & Connection Pooling
 # ---------------------------------------------------------------------------
-MAX_TASKS_PER_WORKER = 32       # Raised to leverage GPU continuous batching (vLLM/Ollama)
+MAX_TASKS_PER_WORKER = 3       # Raised to leverage GPU continuous batching (vLLM/Ollama)
 QUEUE_MAXSIZE         = 1000     # Expanded buffer size for high-throughput testing
-WORKER_TIMEOUT_SEC    = 30       # Faster eviction of silent/dead workers (was 300s)
+WORKER_TIMEOUT_SEC    = 300       # Faster eviction of silent/dead workers (was 300s)
 HTTP_REQUEST_TIMEOUT  = 120      # Defensive timeout limit for generation (was 300s)
 RETRY_ATTEMPTS        = 1        # Reduced retries to avoid compounding queue delays
 

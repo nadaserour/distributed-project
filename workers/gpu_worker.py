@@ -151,8 +151,9 @@ async def generate_task(data: LB_To_Worker):
  
         # Fix 3: run_llm is async — must be awaited
 
-        ai_answer = await run_llm(data.instruction, context)
+       # ai_answer = await run_llm(data.instruction, context)
  
+        ai_answer = await loop.run_in_executor(None, run_llm, data.instruction, context)
         inference_end = time.time()
  
         response_obj = Worker_To_Master(
