@@ -11,7 +11,7 @@ The current working runtime is the FastAPI master/worker architecture:
 - RAG retriever and index builder: `rag/`
 - Streamlit client UI: `client/ui.py`
 
-`main.py` and `client/load_generator.py` appear to be older/demo code paths and do not match the current service architecture as closely as the FastAPI modules above.
+
 
 ## Features
 
