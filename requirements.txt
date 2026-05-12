@@ -23,3 +23,6 @@ loguru                 # For clean, colored system logs
 asyncio
 psutil                 # For monitoring system/GPU health
 pytest
+
+openai>=1.0.0          # OpenAI-compatible client for vLLM
+ 

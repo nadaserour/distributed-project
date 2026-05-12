@@ -60,7 +60,7 @@ def get_port() -> int:
 
             return int(sys.argv[i + 1])
 
-    return 8001
+    return 8081
  
 def get_consistent_id(port: int) -> uuid.UUID:
 
@@ -72,7 +72,7 @@ CURRENT_PORT    = get_port()
 
 MY_NODE_ID      = get_consistent_id(CURRENT_PORT)
 
-MASTER_URL      = "http://localhost:8000"   # change if master is on a different machine
+MASTER_URL      = "http://localhost:8080"   # change if master is on a different machine
 
 active_tasks_counter = 0
  
@@ -151,9 +151,8 @@ async def generate_task(data: LB_To_Worker):
  
         # Fix 3: run_llm is async — must be awaited
 
-       # ai_answer = await run_llm(data.instruction, context)
- 
         ai_answer = await loop.run_in_executor(None, run_llm, data.instruction, context)
+ 
         inference_end = time.time()
  
         response_obj = Worker_To_Master(
@@ -164,9 +163,9 @@ async def generate_task(data: LB_To_Worker):
 
             response_text      = ai_answer,
 
-            model_used         = "qwen2.5:14b",
+            model_used         = "Qwen/Qwen2.5-14B-Instruct",
 
-            provider           = "Ollama-Distributed-RAG",
+            provider           = "vLLM-Distributed-RAG",
 
             worker_received_at = received_at,
 
@@ -186,7 +185,22 @@ async def generate_task(data: LB_To_Worker):
 
         logger.error(f"[Worker] RAG/LLM failure: {exc}")
 
-        return jsonable_encoder({"status": "error", "detail": str(exc)})
+        inference_end = time.time()
+
+        error_obj = Worker_To_Master(
+            task_id            = str(data.task_id),
+            worker_id          = str(MY_NODE_ID),
+            response_text      = f"[ERROR] {exc}",
+            model_used         = "none",
+            provider           = "none",
+            worker_received_at = received_at,
+            inference_start    = inference_start,
+            inference_end      = inference_end,
+            metrics            = {},
+            status             = "error",
+        )
+
+        return jsonable_encoder(error_obj)
  
     finally:
 

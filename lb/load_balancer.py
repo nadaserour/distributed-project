@@ -14,9 +14,9 @@ logger = logging.getLogger(__name__)
 # ---------------------------------------------------------------------------
 # Optimizing Tunables for Parallel GPU Batching & Connection Pooling
 # ---------------------------------------------------------------------------
-MAX_TASKS_PER_WORKER = 3       # Raised to leverage GPU continuous batching (vLLM/Ollama)
+MAX_TASKS_PER_WORKER = 32       # Raised to leverage GPU continuous batching (vLLM/Ollama)
 QUEUE_MAXSIZE         = 1000     # Expanded buffer size for high-throughput testing
-WORKER_TIMEOUT_SEC    = 300       # Faster eviction of silent/dead workers (was 300s)
+WORKER_TIMEOUT_SEC    = 30       # Faster eviction of silent/dead workers (was 300s)
 HTTP_REQUEST_TIMEOUT  = 120      # Defensive timeout limit for generation (was 300s)
 RETRY_ATTEMPTS        = 1        # Reduced retries to avoid compounding queue delays
 
@@ -149,16 +149,22 @@ class LoadBalancer:
                 )
                 resp.raise_for_status()
                 data = resp.json()
-                
+
+                if "task_id" not in data or "worker_id" not in data:
+                    raise RuntimeError(
+                        f"Worker {worker.node_id} returned malformed response: "
+                        f"status={data.get('status')}, detail={data.get('detail', 'n/a')}"
+                    )
+
                 return Worker_To_Master(
                     task_id              = UUID(data["task_id"]),
                     worker_id            = data["worker_id"],
-                    response_text        = data["response_text"],
+                    response_text        = data.get("response_text", ""),
                     model_used           = data.get("model_used", "unknown"),
                     provider             = data.get("provider", "unknown"),
-                    worker_received_at   = data["worker_received_at"],
-                    inference_start      = data["inference_start"],
-                    inference_end        = data["inference_end"],
+                    worker_received_at   = data.get("worker_received_at", 0),
+                    inference_start      = data.get("inference_start", 0),
+                    inference_end        = data.get("inference_end", 0),
                     metrics              = data.get("metrics", {}),
                     status               = data.get("status", "success"),
                 )

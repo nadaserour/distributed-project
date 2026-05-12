@@ -23,7 +23,7 @@ import httpx
 # ---------------------------------------------------------------------------
 # Configuration — adjust to match your deployment
 # ---------------------------------------------------------------------------
-MASTER_URL  = "http://localhost:8000"
+MASTER_URL  = "http://localhost:8080"
 API_KEY     = "dev-key-1"
 OUTPUT_DIR  = Path("tests/results")
 TIMEOUT_S   = 120.0   # per-request timeout

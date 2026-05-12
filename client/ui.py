@@ -4,7 +4,7 @@ import time
 
 # --- CONFIGURATION ---
 # Ensure your Master Node is running on this port
-MASTER_URL = "http://localhost:8000/query"
+MASTER_URL = "http://localhost:8080/query"
 
 st.set_page_config(
     page_title="Distributed RAG Interface",
@@ -95,8 +95,8 @@ with st.sidebar:
     st.divider()
     st.markdown("""
     **Architecture:**
-    - Master (Port 8000)
-    - Workers (Port 8001, 8002)
+    - Master (Port 8080)
+    - Workers (Port 8081, 8082)
     - LLM: Qwen 2.5 (A6000)
     """)
     if st.button("Clear Chat History"):

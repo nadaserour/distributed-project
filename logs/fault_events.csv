@@ -370,3 +370,25 @@ timestamp,event,node_id,worker_url,detail,elapsed_silent_s
 1778405972.353,WORKER_DEAD,7b06ed3c-f54f-bf4c-54b4-c9384141bf7a,http://localhost:8003,Heartbeat timeout,30.086
 1778537072.1428,WORKER_RECOVERED,69f39c8d-7f35-c749-67ca-82e6317f56de,http://localhost:8001,Health check passed,0.0
 1778537132.4944,WORKER_RECOVERED,69f39c8d-7f35-c749-67ca-82e6317f56de,http://localhost:8001,Health check passed,0.0
+1778548829.6271,WORKER_RECOVERED,779e70d6-2e5a-85fc-197b-b8e23d944db1,http://localhost:8081,Health check passed,0.0
+1778548829.8324,WORKER_RECOVERED,764f139b-5d91-2383-8be6-e072c8c39472,http://localhost:8082,Health check passed,0.0
+1778548829.8402,WORKER_RECOVERED,f9c446eb-ce92-aca1-a2e9-e51314cddfcd,http://localhost:8083,Health check passed,0.0
+1778548982.7594,WORKER_RECOVERED,764f139b-5d91-2383-8be6-e072c8c39472,http://localhost:8082,Health check passed,0.0
+1778549013.2319,WORKER_RECOVERED,779e70d6-2e5a-85fc-197b-b8e23d944db1,http://localhost:8081,Health check passed,0.0
+1778549013.4087,WORKER_RECOVERED,f9c446eb-ce92-aca1-a2e9-e51314cddfcd,http://localhost:8083,Health check passed,0.0
+1778549149.0553,WORKER_DEAD,779e70d6-2e5a-85fc-197b-b8e23d944db1,http://localhost:8081,Heartbeat timeout,126.611
+1778549149.0556,WORKER_DEAD,764f139b-5d91-2383-8be6-e072c8c39472,http://localhost:8082,Heartbeat timeout,122.228
+1778549159.0565,WORKER_DEAD,f9c446eb-ce92-aca1-a2e9-e51314cddfcd,http://localhost:8083,Heartbeat timeout,126.411
+1778550366.2243,WORKER_RECOVERED,f9c446eb-ce92-aca1-a2e9-e51314cddfcd,http://localhost:8083,Health check passed,0.0
+1778550440.4246,WORKER_RECOVERED,f9c446eb-ce92-aca1-a2e9-e51314cddfcd,http://localhost:8083,Health check passed,0.0
+1778550470.495,WORKER_RECOVERED,779e70d6-2e5a-85fc-197b-b8e23d944db1,http://localhost:8081,Health check passed,0.0
+1778550470.5043,WORKER_RECOVERED,764f139b-5d91-2383-8be6-e072c8c39472,http://localhost:8082,Health check passed,0.0
+1778550582.6484,WORKER_RECOVERED,764f139b-5d91-2383-8be6-e072c8c39472,http://localhost:8082,Health check passed,0.0
+1778550617.7657,WORKER_RECOVERED,779e70d6-2e5a-85fc-197b-b8e23d944db1,http://localhost:8081,Health check passed,0.0
+1778550733.6335,WORKER_RECOVERED,764f139b-5d91-2383-8be6-e072c8c39472,http://localhost:8082,Health check passed,0.0
+1778551233.0012,WORKER_RECOVERED,f9c446eb-ce92-aca1-a2e9-e51314cddfcd,http://localhost:8083,Health check passed,0.0
+1778551263.0786,WORKER_RECOVERED,764f139b-5d91-2383-8be6-e072c8c39472,http://localhost:8082,Health check passed,0.0
+1778551333.2873,WORKER_RECOVERED,f9c446eb-ce92-aca1-a2e9-e51314cddfcd,http://localhost:8083,Health check passed,0.0
+1778553448.4965,WORKER_RECOVERED,f9c446eb-ce92-aca1-a2e9-e51314cddfcd,http://localhost:8083,Health check passed,0.0
+1778553508.5936,WORKER_RECOVERED,764f139b-5d91-2383-8be6-e072c8c39472,http://localhost:8082,Health check passed,0.0
+1778553508.6058,WORKER_RECOVERED,f9c446eb-ce92-aca1-a2e9-e51314cddfcd,http://localhost:8083,Health check passed,0.0
